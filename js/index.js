@@ -111,7 +111,8 @@ problemList = [
   "bones",
   "monster",
   "corner",
-  "stuck"
+  "stuck",
+  "fancy"
 ],
 
 // Booleans to be toggled if these APIs prove non-functional
