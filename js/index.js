@@ -104,19 +104,19 @@ var spellingList = [
   'promise',
   'excellent',
   'cheddar'
-  ],
+],
 
-  // For a few words, the Merriam-Webster API returns audio for something other than the desired word, e.g. "Gila monster" for "monster." I just hard-code them as exceptions here.
-  problemList = [
-    "bones",
-    "monster",
-    "corner",
-    "stuck"
-  ],
+// For a few words, the Merriam-Webster API returns audio for something other than the desired word, e.g. "Gila monster" for "monster." I just hard-code them as exceptions here.
+problemList = [
+  "bones",
+  "monster",
+  "corner",
+  "stuck"
+],
 
-  // Booleans to be toggled if these APIs prove non-functional
-  hasTTS = true,
-  hasStorage = true;
+// Booleans to be toggled if these APIs prove non-functional
+hasTTS = true,
+hasStorage = true;
 
 if ('speechSynthesis' in window === false) {
   hasTTS = false;
@@ -162,14 +162,14 @@ if (hasStorage && Number(localStorage.recordScore) >= 0) {
 }
 $("#recordScore").html(recordCount);
 var word = "",
-    tts,
-    usingTTS = false,
-    audio,
-    audioURL = "",
-    hintLetter = 1,
-    loadaling,
-    
-    chip = {
+tts,
+usingTTS = false,
+audio,
+audioURL = "",
+hintLetter = 1,
+loadaling,
+
+chip = {
   tag: 'chip content',
   id: 1, //optional
 };
@@ -186,7 +186,7 @@ function stopLoader() {
   loadaling = false; // http://hrwiki.org/wiki/Irregular_Loading_Screens
 }
 
-var updateWord = function() {
+var updateWord = function () {
   preloader();
   word = spellingList[currentWordIndex];
   localStorage.currentWordIndex = currentWordIndex;
@@ -205,7 +205,7 @@ function getMerriamWebster() {
       withCredentials: false
     },
     dataType: "xml",
-    success: function(data) {
+    success: function (data) {
       var audioFilename = $(data).find("hw:contains(" + word + ") ~ sound wav").html();
       // look through the XML response for a "<hw>" element with the desired word, with a sibling <sound> and harvest its <wav>. Cause that seems to be how the API is set up... most often. Except when it's not (gila monster!).
       console.log("wav =" + audioFilename);
@@ -243,7 +243,7 @@ function getMerriamWebster() {
       $("#sentence").html("Example: " + sentence.replace(word, "_____"));
       stopLoader();
     },
-    error: function() {
+    error: function () {
       alert("I'm sorry, there was an error. Try reloading?");
     }
   });
@@ -282,7 +282,7 @@ function updateRecord() {
 }
 
 // function to play the audio
-$("#play").click(function() {
+$("#play").click(function () {
   if (loadaling === false) {
     if (usingTTS === true) {
       window.speechSynthesis.speak(tts);
@@ -296,7 +296,7 @@ $("#play").click(function() {
 });
 
 // function to process submitted answer
-$("#response").submit(function(event) {
+$("#response").submit(function (event) {
   event.preventDefault();
   var response = $("#responseText").val().trim();
   if (word === spellingList[spellingList.length - 1]) {
@@ -316,13 +316,13 @@ $("#response").submit(function(event) {
   }
 });
 
-$("#resetScore").click(function() {
+$("#resetScore").click(function () {
   localStorage.recordScore = 0;
   recordCount = 0;
   $("#recordScore").text("0");
 });
 
-$("#hint").click(function() {
+$("#hint").click(function () {
   Materialize.toast("It starts with: " + word.substring(0, hintLetter), 4000, "rounded");
   hintLetter++;
   $("#responseText").focus();
@@ -334,25 +334,25 @@ function skipWord() {
   getMerriamWebster();
 }
 
-$("#skip").click(function() {
+$("#skip").click(function () {
   studyListArray.push(word);
   localStorage.studyListArray = studyListArray;
   skipWord();
 });
 
-$("#restart").click(function() {
+$("#restart").click(function () {
   currentWordIndex = 0;
   getMerriamWebster();
 });
 
-$("#random").click(function() {
+$("#random").click(function () {
   currentWordIndex = Math.floor((Math.random() * 100) + 1);
   getMerriamWebster();
   $('#jumpWord').modal('close');
 });
 
 // open the study list modal, and build its content
-$("#study").click(function() {
+$("#study").click(function () {
   for (var i = 0, limit = studyListArray.length; i < limit; i++) {
     var studyWord = studyListArray[i];
     if (studyWord === "undefined" || studyWord.length < 1 || $("#studyListWords").find("#" + studyWord).length) {
@@ -364,29 +364,29 @@ $("#study").click(function() {
   $('#studyList').openModal();
 });
 
-$("#jump").click(function() {
+$("#jump").click(function () {
   $("#jumpWord").openModal();
 });
 
-$("#wordJumper").submit(function(event) {
+$("#wordJumper").submit(function (event) {
   event.preventDefault();
   currentWordIndex = document.getElementById("jumpSlider").value - 1;
   console.log(currentWordIndex);
   getMerriamWebster();
 });
 
-$("#aboutLink").click(function() {
+$("#aboutLink").click(function () {
   $("#about").openModal();
 })
 
 // remove words from study list
-$("#studyListWords").on("click", ".chip", function() {
+$("#studyListWords").on("click", ".chip", function () {
   studyListArray.splice(studyListArray.indexOf(this.id), 1);
   localStorage.studyListArray = studyListArray;
 })
 
 // clear study list
-$("#studyClear").click(function() {
+$("#studyClear").click(function () {
   studyListArray = [];
   localStorage.studyListArray = "";
   $("#studyListWords").html("");
@@ -395,7 +395,7 @@ $("#studyClear").click(function() {
 // kick it off
 $(document).ready(getMerriamWebster());
 
-$(document).ready(function() {
+$(document).ready(function () {
   // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
   $('.modal').modal();
 });
